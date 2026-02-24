@@ -10,36 +10,36 @@ import {
 } from 'recharts';
 import { formatCurrency } from '../utils/calculations';
 
-export default function RetirementChart({ data, retirementAge, irr, onIrrChange }) {
-  const formatYAxis = (value) => {
-    if (value >= 1000000) {
-      return `$${(value / 1000000).toFixed(1)}M`;
-    }
-    if (value >= 1000) {
-      return `$${(value / 1000).toFixed(0)}K`;
-    }
-    return `$${value}`;
-  };
+const formatYAxis = (value) => {
+  if (value >= 1000000) {
+    return `$${(value / 1000000).toFixed(1)}M`;
+  }
+  if (value >= 1000) {
+    return `$${(value / 1000).toFixed(0)}K`;
+  }
+  return `$${value}`;
+};
 
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-[#2a2a2a] p-3 border border-[#3a3a3a] rounded-lg shadow-lg">
+        <p className="font-semibold text-white">Age {label}</p>
+        <p className="text-[#d97706]">{formatCurrency(payload[0].value)}</p>
+      </div>
+    );
+  }
+  return null;
+};
+
+export default function RetirementChart({ data, retirementAge, irr, onIrrChange }) {
   // Calculate Y-axis ticks at 1M intervals - always show every 1M increment
-  const maxAmount = Math.max(...data.map((d) => d.amount));
+  const maxAmount = data.reduce((max, d) => (d.amount > max ? d.amount : max), 0);
   const maxTick = Math.ceil(maxAmount / 1000000) * 1000000;
   const yAxisTicks = [];
   for (let i = 0; i <= maxTick; i += 1000000) {
     yAxisTicks.push(i);
   }
-
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-[#2a2a2a] p-3 border border-[#3a3a3a] rounded-lg shadow-lg">
-          <p className="font-semibold text-white">Age {label}</p>
-          <p className="text-[#d97706]">{formatCurrency(payload[0].value)}</p>
-        </div>
-      );
-    }
-    return null;
-  };
 
   return (
     <div className="bg-[#2a2a2a] p-6 rounded-xl border border-[#3a3a3a]">

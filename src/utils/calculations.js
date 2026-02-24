@@ -19,10 +19,12 @@ export function calculateMonthlyIncome(fundAtRetirement, withdrawalRate = 0.07) 
   return Math.round(annualIncome / 12);
 }
 
+const currencyFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  maximumFractionDigits: 0,
+});
+
 export function formatCurrency(amount) {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 0,
-  }).format(amount);
+  return currencyFormatter.format(amount);
 }

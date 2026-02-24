@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { formatCurrency } from '../utils/calculations';
 
 // Get withdrawal rate based on age (RRIF minimum withdrawal rates + 0.25%)
@@ -32,11 +32,13 @@ function getWithdrawalRate(age) {
   return 0.07; // Default for ages below 71 (except 65)
 }
 
+const THIS_YEAR = new Date().getFullYear();
+
 // Calculate fund value and monthly income at target ages
 function calculateIncomeAtAges(fundAtRetirement, retirementAge, annualReturn, inflationRate, currentAge) {
   const IRR = annualReturn / 100;
   const INFLATION_RATE = inflationRate / 100;
-  const thisYear = new Date().getFullYear();
+  const thisYear = THIS_YEAR;
   const targetAges = [65, 70, 75, 80, 85];
   const results = [];
 
@@ -82,11 +84,13 @@ function calculateIncomeAtAges(fundAtRetirement, retirementAge, annualReturn, in
 }
 
 export default function MonthlyIncome({ retirementAge, fundAtRetirement, allGrowthData, irr, currentAge }) {
-  const thisYear = new Date().getFullYear();
   const [showWithdrawalRates, setShowWithdrawalRates] = useState(false);
   const [annualReturn, setAnnualReturn] = useState(4);
   const [inflationRate, setInflationRate] = useState(2.5);
-  const incomeData = calculateIncomeAtAges(fundAtRetirement, retirementAge, annualReturn, inflationRate, currentAge);
+  const incomeData = useMemo(
+    () => calculateIncomeAtAges(fundAtRetirement, retirementAge, annualReturn, inflationRate, currentAge),
+    [fundAtRetirement, retirementAge, annualReturn, inflationRate, currentAge]
+  );
 
   const selectClasses = 'bg-[#1f1f1f] border border-[#3a3a3a] text-white rounded px-2 py-0.5 text-sm focus:outline-none focus:border-[#d97706] cursor-pointer';
 
@@ -185,7 +189,7 @@ export default function MonthlyIncome({ retirementAge, fundAtRetirement, allGrow
             <tr>
               <td className="py-2 px-3 text-[#a0a0a0]">
                 <div>Monthly Income</div>
-                <div className="text-xs text-[#6a6a6a]">({thisYear} dollars)</div>
+                <div className="text-xs text-[#6a6a6a]">({THIS_YEAR} dollars)</div>
               </td>
               {incomeData.map((data) => (
                 <td key={data.age} className="text-center py-2 px-3">
