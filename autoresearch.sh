@@ -9,16 +9,18 @@ if [ ! -d dist ]; then
   exit 1
 fi
 
-sum_bytes() {
-  local pattern="$1"
-  local bytes
-  bytes=$(find dist -type f $pattern -print0 | xargs -0 stat -f%z | awk '{s+=$1} END {print s+0}')
-  echo "$bytes"
+sum_bytes_all() {
+  find dist -type f -print0 | xargs -0 stat -f%z | awk '{s+=$1} END {print s+0}'
 }
 
-total_bytes=$(sum_bytes "")
-js_bytes=$(sum_bytes "-name '*.js'")
-css_bytes=$(sum_bytes "-name '*.css'")
+sum_bytes_ext() {
+  local ext="$1"
+  find dist -type f -name "*.${ext}" -print0 | xargs -0 stat -f%z | awk '{s+=$1} END {print s+0}'
+}
+
+total_bytes=$(sum_bytes_all)
+js_bytes=$(sum_bytes_ext "js")
+css_bytes=$(sum_bytes_ext "css")
 
 total_kb=$(( (total_bytes + 1023) / 1024 ))
 js_kb=$(( (js_bytes + 1023) / 1024 ))
