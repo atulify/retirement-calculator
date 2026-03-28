@@ -7,6 +7,7 @@ export default function InputForm() {
   const [savings, setSavings] = useState('');
   const [irr, setIrr] = useState(7);
   const [retirementAge, setRetirementAge] = useState(65);
+  const maxSavings = 10_000_000;
 
   const currentAgeOptions = Array.from({ length: 26 }, (_, i) => 45 + i);
   const irrOptions = Array.from({ length: 14 }, (_, i) => 2 + i);
@@ -19,6 +20,10 @@ export default function InputForm() {
     const savingsNum = parseFloat(savings.replace(/,/g, ''));
     if (isNaN(savingsNum) || savingsNum <= 0) {
       alert('Please enter a valid savings amount');
+      return;
+    }
+    if (savingsNum > maxSavings) {
+      alert(`Please enter a savings amount of $${maxSavings.toLocaleString()} or less`);
       return;
     }
     navigate('/results', {
@@ -34,7 +39,8 @@ export default function InputForm() {
   const handleSavingsChange = (e) => {
     const value = e.target.value.replace(/[^0-9]/g, '');
     if (value) {
-      setSavings(Number(value).toLocaleString());
+      const clampedValue = Math.min(Number(value), maxSavings);
+      setSavings(clampedValue.toLocaleString());
     } else {
       setSavings('');
     }
