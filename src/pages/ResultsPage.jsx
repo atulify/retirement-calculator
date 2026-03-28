@@ -1,32 +1,21 @@
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useEffect, useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import RetirementChart from '../components/RetirementChart';
 import MonthlyIncome from '../components/MonthlyIncome';
 import { calculateGrowth } from '../utils/calculations';
 
-export default function ResultsPage() {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const state = location.state;
-  const [irr, setIrr] = useState(state?.irr || 5);
+export default function ResultsPage({ data, onRestart }) {
+  const [irr, setIrr] = useState(data?.irr || 5);
 
-  useEffect(() => {
-    if (!state) {
-      navigate('/');
-    }
-  }, [state, navigate]);
-
-  if (!state) {
+  if (!data) {
     return null;
   }
 
-  const { currentAge, savings, retirementAge } = state;
-  
-  // Recalculate growth data when IRR changes
+  const { currentAge, savings, retirementAge } = data;
+
   const allGrowthData = useMemo(() => {
     return calculateGrowth(currentAge, savings, irr);
   }, [currentAge, savings, irr]);
-  
+
   const growthData = allGrowthData.filter((d) => d.age <= 70);
   const fundAtRetirement = allGrowthData.find((d) => d.age === retirementAge)?.amount || 0;
 
@@ -43,8 +32,8 @@ export default function ResultsPage() {
         </div>
 
         <div className="space-y-8">
-          <RetirementChart 
-            data={growthData} 
+          <RetirementChart
+            data={growthData}
             retirementAge={retirementAge}
             irr={irr}
             onIrrChange={setIrr}
@@ -60,7 +49,7 @@ export default function ResultsPage() {
 
         <div className="mt-8 text-center">
           <button
-            onClick={() => navigate('/')}
+            onClick={onRestart}
             className="bg-[#3a3a3a] text-white py-3 px-8 rounded-lg font-semibold hover:bg-[#4a4a4a] transition-colors border border-[#4a4a4a]"
           >
             Start Over

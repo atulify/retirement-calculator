@@ -24,3 +24,6 @@ dist-ssr/
 .env.development.local
 .vercel
 .env*.local
+
+# Autoresearch artifacts
+*autoresearch*
