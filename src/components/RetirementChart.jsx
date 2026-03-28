@@ -33,13 +33,8 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default function RetirementChart({ data, retirementAge, irr, onIrrChange }) {
-  // Calculate Y-axis ticks at 1M intervals - always show every 1M increment
   const maxAmount = data.reduce((max, d) => (d.amount > max ? d.amount : max), 0);
   const maxTick = Math.ceil(maxAmount / 1000000) * 1000000;
-  const yAxisTicks = [];
-  for (let i = 0; i <= maxTick; i += 1000000) {
-    yAxisTicks.push(i);
-  }
 
   return (
     <div className="bg-[#2a2a2a] p-6 rounded-xl border border-[#3a3a3a]">
@@ -80,8 +75,8 @@ export default function RetirementChart({ data, retirementAge, irr, onIrrChange 
             label={{ value: 'Amount ($)', angle: -90, position: 'left', offset: 15, fill: '#a0a0a0' }}
             tick={{ fontSize: 12, fill: '#a0a0a0' }}
             domain={[0, maxTick]}
-            ticks={yAxisTicks}
-            interval={0}
+            tickCount={6}
+            minTickGap={12}
             stroke="#3a3a3a"
           />
           <Tooltip content={<CustomTooltip />} />
