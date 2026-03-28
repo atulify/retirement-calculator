@@ -1,8 +1,6 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
-export default function InputForm() {
-  const navigate = useNavigate();
+export default function InputForm({ onSubmit }) {
   const [currentAge, setCurrentAge] = useState(45);
   const [savings, setSavings] = useState('');
   const [irr, setIrr] = useState(7);
@@ -26,13 +24,11 @@ export default function InputForm() {
       alert(`Please enter a savings amount of $${maxSavings.toLocaleString()} or less`);
       return;
     }
-    navigate('/results', {
-      state: {
-        currentAge,
-        savings: savingsNum,
-        irr,
-        retirementAge,
-      },
+    onSubmit({
+      currentAge,
+      savings: savingsNum,
+      irr,
+      retirementAge,
     });
   };
 

@@ -26,4 +26,5 @@ Minimize the deploy artifact size produced by `npm run build` for the retirement
 - Prefer not to add new runtime dependencies unless they reduce bundle size.
 
 ## What's Been Tried
-- Baseline pending.
+- Baseline bundle_kb: 587kb.
+- Replaced Recharts with custom SVG line chart and removed recharts dependency/manualChunks; bundle_kb down to 255kb.

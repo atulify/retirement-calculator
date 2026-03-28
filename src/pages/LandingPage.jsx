@@ -1,6 +1,6 @@
 import InputForm from '../components/InputForm';
 
-export default function LandingPage() {
+export default function LandingPage({ onSubmit }) {
   return (
     <div className="min-h-screen bg-[#1a1a1a] py-12 px-4">
       <div className="max-w-md mx-auto">
@@ -16,7 +16,7 @@ export default function LandingPage() {
           <h2 className="text-xl font-semibold text-white mb-6">
             Enter Your Financial Goals
           </h2>
-          <InputForm />
+          <InputForm onSubmit={onSubmit} />
         </div>
       </div>
     </div>
