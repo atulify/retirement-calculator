@@ -28,3 +28,4 @@ Minimize the deploy artifact size produced by `npm run build` for the retirement
 ## What's Been Tried
 - Baseline bundle_kb: 587kb.
 - Replaced Recharts with custom SVG line chart and removed recharts dependency/manualChunks; bundle_kb down to 255kb.
+- Removed react-router-dom in favor of minimal history-based navigation; bundle_kb down to 222kb.
